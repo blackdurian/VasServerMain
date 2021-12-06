@@ -29,6 +29,10 @@ public class VaccineRecord extends UserBaseEntity {
     private  Vaccine vaccines;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "doctor_user_id", referencedColumnName = "id")
     private User doctor;
     private Instant vaccineDate;

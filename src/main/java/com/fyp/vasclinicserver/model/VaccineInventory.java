@@ -24,6 +24,9 @@ public class VaccineInventory extends BaseEntity {
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name = "vaccine_id", referencedColumnName = "id")
     private Vaccine vaccine;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinic_id", referencedColumnName = "id")
+    private Clinic clinic;
     private Integer stock;
     private Instant mfgDate;
     private Instant expiryDate;

@@ -15,26 +15,14 @@ import java.util.Set;
 @Entity
 public class ShiftBoard extends UserBaseEntity {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "id",
-            updatable = false,
-            nullable = false
-    )
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinic_id", referencedColumnName = "id")
     private Clinic clinic;
-
-    @OneToMany(mappedBy = "shiftBoard",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private Set<Shift> shiftList;
 
     @Enumerated(EnumType.STRING)
     private ShiftBoardStatus status;

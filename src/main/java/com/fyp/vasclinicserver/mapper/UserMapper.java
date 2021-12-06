@@ -21,11 +21,12 @@ public interface UserMapper {
     @Mapping(target = "id", source = "username")
     @Mapping(target = "roles", expression = "java(mapRoles(user.getRoles()))")
     @Mapping(target = "bod", expression = "java(mapBod(user.getBod()))")
+    @Mapping(target = "gender", expression = "java(user.getGender().getLabel())")
     @InheritInverseConfiguration
     ProfileResponse  userToProfileResponse(User user);
 
     default String mapRoles(Set<Role> roles) {
-        return roles.stream().map(role -> role.getName().name()).collect(Collectors.joining("|"));
+        return roles.stream().map(role -> role.getName().getLabel()).collect(Collectors.joining(" | "));
     }
     default String mapBod(Instant bod) {
         return TimeUtil.convertInstantToStringDate(bod, TimeUtil.BOD_FORMAT);

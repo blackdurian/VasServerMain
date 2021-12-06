@@ -15,6 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${vas.cors.allowedOrigins}")
     private String[] allowedOrigins;
 
+
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")

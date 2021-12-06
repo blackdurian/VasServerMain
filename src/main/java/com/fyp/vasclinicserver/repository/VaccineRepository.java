@@ -11,5 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface VaccineRepository extends  JpaRepository<Vaccine,String> {
     Page<Vaccine> findByDeletedFalse(Pageable pageable);
 
+    Page<Vaccine> findByDeletedFalseAndId(String id, Pageable pageable);
     Page<Vaccine> findById(String id, Pageable pageable);
 }

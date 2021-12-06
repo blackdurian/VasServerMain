@@ -92,9 +92,10 @@ public class AuthService { //TODO: Refactor to Account module new Server
         return token;
     }
 
-    public void verifyAccount(String token) {
+    public User verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
         fetchUserAndEnable(verificationToken.orElseThrow(() -> new VasException("Invalid Token")));
+        return verificationToken.get().getUser();
     }
 
     public AuthenticationResponse login(LoginRequest loginRequest) {

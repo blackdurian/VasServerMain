@@ -14,20 +14,15 @@ import java.time.Instant;
 @Entity
 public class Shift extends UserBaseEntity {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "id", updatable = false, nullable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Instant timeStart;
     private Instant timeEnd;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_user_id", referencedColumnName = "id")
     private User doctor;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shift_board")
+    @JoinColumn(name = "shift_board_id", referencedColumnName = "id")
     private ShiftBoard shiftBoard;
     private boolean enabled;
 }

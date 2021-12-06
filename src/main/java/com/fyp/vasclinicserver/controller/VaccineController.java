@@ -3,6 +3,7 @@ package com.fyp.vasclinicserver.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fyp.vasclinicserver.mapper.PagingMapper;
 import com.fyp.vasclinicserver.model.Vaccine;
+import com.fyp.vasclinicserver.payload.ApiResponse;
 import com.fyp.vasclinicserver.service.VaccineService;
 import lombok.AllArgsConstructor;
 
@@ -36,11 +37,11 @@ public class VaccineController {
         } catch (JsonProcessingException| NullPointerException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error Message" + e.getMessage());
+                    .body(new ApiResponse(false, e.getMessage()));
         }
     }
 
-    @GetMapping("/api/vaccines/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Vaccine> findVaccineById(@PathVariable("id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)

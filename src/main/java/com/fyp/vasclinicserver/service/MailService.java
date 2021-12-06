@@ -4,6 +4,7 @@ import com.fyp.vasclinicserver.payload.NotificationEmail;
 import com.fyp.vasclinicserver.exceptions.NotificationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,11 +18,13 @@ import org.springframework.stereotype.Service;
 public class MailService {
     private final JavaMailSender mailSender;
     private final MailContentBuilder mailContentBuilder;
+    @Value("${spring.mail.username}")
+    private String ownerEmail;
     @Async
     void sendMail(NotificationEmail notificationEmail) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom("springreddit@email.com");
+            messageHelper.setFrom(ownerEmail);
             messageHelper.setTo(notificationEmail.getRecipient());
             messageHelper.setSubject(notificationEmail.getSubject());
             messageHelper.setText(notificationEmail.getBody());

@@ -31,7 +31,7 @@ public class VaccineService {
             String key = firstKey.get();
             Object value = filterNode.get(key);
             if(key.equals("id")&& value instanceof String){
-                return vaccineRepository.findById((String) value,paging);
+                return vaccineRepository.findByDeletedFalseAndId((String) value,paging);
             }
         }
         return vaccineRepository.findByDeletedFalse(paging);
