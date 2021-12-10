@@ -2,7 +2,6 @@ package com.fyp.vasclinicserver.controller;
 
 import com.fyp.vasclinicserver.model.Role;
 import com.fyp.vasclinicserver.model.User;
-import com.fyp.vasclinicserver.model.enums.RoleName;
 import com.fyp.vasclinicserver.payload.*;
 import com.fyp.vasclinicserver.repository.UserRepository;
 import com.fyp.vasclinicserver.service.AuthService;

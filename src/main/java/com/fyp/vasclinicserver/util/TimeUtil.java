@@ -8,7 +8,8 @@ import java.time.format.DateTimeFormatter;
 
 public class TimeUtil {
     //Todo: Get Timezone from properties file
- public static final DateTimeFormatter BOD_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneId.systemDefault());
+    public static final DateTimeFormatter BOD_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneId.systemDefault());
+    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ISO_OFFSET_DATE.withZone(ZoneId.systemDefault());
 
     public static Instant convertStringDateToInstant(String date, DateTimeFormatter formatter){
        return LocalDate.parse(date, formatter)

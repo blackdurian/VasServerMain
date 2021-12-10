@@ -32,9 +32,9 @@ public class EmployeeController {
         String username = principal.getName();
         try {
             Page<EmployeeResponse> pageResult = clinicService.getAllEmployeesByClinic(sort,range,filter,username);
-            List<EmployeeResponse> vaccines = pageResult.getContent();
+            List<EmployeeResponse> employees = pageResult.getContent();
             String contextRange = PagingMapper.mapToContextRange(range,pageResult);
-            return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(vaccines);
+            return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(employees);
         } catch (JsonProcessingException | NullPointerException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

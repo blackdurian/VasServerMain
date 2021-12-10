@@ -5,7 +5,6 @@ import com.fyp.vasclinicserver.mapper.PagingMapper;
 import com.fyp.vasclinicserver.model.Clinic;
 
 import com.fyp.vasclinicserver.payload.ClinicRequest;
-import com.fyp.vasclinicserver.payload.EmployeeResponse;
 import com.fyp.vasclinicserver.service.ClinicService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController

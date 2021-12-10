@@ -16,8 +16,8 @@ public class Shift extends UserBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Instant timeStart;
-    private Instant timeEnd;
+    private Instant start;
+    private Instant end;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doctor_user_id", referencedColumnName = "id")
     private User doctor;
