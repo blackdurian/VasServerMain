@@ -22,7 +22,7 @@ public class SurveyQuestion extends UserBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "vaccine_id", referencedColumnName = "id")
     private Vaccine vaccine;
     @Enumerated(EnumType.STRING)
     private SurveyType surveyType;

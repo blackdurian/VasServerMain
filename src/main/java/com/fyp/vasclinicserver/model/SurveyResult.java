@@ -21,6 +21,9 @@ public class SurveyResult extends UserBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "vaccine_record_id", referencedColumnName = "id")
+    private VaccineRecord vaccineRecord;
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @ManyToOne(fetch = LAZY)

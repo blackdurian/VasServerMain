@@ -39,12 +39,9 @@ public class Appointment extends UserBaseEntity {
     @JoinColumn(name = "clinic_id", referencedColumnName = "id")
     private Clinic clinic;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "enquiry_vaccines",
-            joinColumns = @JoinColumn(name = "vaccines_id"),
-            inverseJoinColumns = @JoinColumn(name = "app_id"))
-    private Set<Vaccine> enquiryVaccines = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vaccines_id", referencedColumnName = "id")
+    private Vaccine vaccine;
 
     private String remark;
 
