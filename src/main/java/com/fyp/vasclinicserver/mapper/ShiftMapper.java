@@ -12,9 +12,9 @@ public interface ShiftMapper {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "start", expression = "java(mapStringDate(shift.getStart()))")
     @Mapping(target = "end", expression = "java(mapStringDate(shift.getEnd()))")
-    @Mapping(target = "doctor", expression = "doctor.username")
-    @Mapping(target = "shiftBoard", expression = "shiftBoard.id")
-    @Mapping(target = "enabled", expression = "enabled")
+    @Mapping(target = "doctor", source = "doctor.username")
+    @Mapping(target = "shiftBoard", source = "shiftBoard.id")
+    @Mapping(target = "enabled", source = "enabled")
     ShiftResponse mapToShiftResponse(Shift shift);
 
     default String mapStringDate(Instant date) {

@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -16,16 +15,16 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Survey {
+public class SurveyResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    @OneToMany
-    @JoinColumn(name = "question_id", referencedColumnName = "id")
-    private List<Question> question;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "survey_question_id", referencedColumnName = "id")
+    private SurveyQuestion surveyQuestion;
     private String jsonResult;
 
 }

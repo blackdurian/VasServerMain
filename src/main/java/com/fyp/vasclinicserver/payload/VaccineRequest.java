@@ -22,5 +22,6 @@ public class VaccineRequest {
     private Double  maxStorageDays;
     @NotBlank(message = "Manufacturer company is required")
     private String mfgCompany;
-
+    @NotBlank(message = "Gap of days between vaccines is required")
+    private Integer GapDays;
 }
