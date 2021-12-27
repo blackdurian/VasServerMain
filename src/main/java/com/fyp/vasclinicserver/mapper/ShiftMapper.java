@@ -3,10 +3,12 @@ package com.fyp.vasclinicserver.mapper;
 import com.fyp.vasclinicserver.model.Shift;
 import com.fyp.vasclinicserver.payload.ShiftResponse;
 import com.fyp.vasclinicserver.util.TimeUtil;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.time.Instant;
 
+@Mapper(componentModel = "spring")
 public interface ShiftMapper {
 
     @Mapping(target = "id", source = "id")

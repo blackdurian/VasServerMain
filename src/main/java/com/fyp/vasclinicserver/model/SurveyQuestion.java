@@ -1,5 +1,6 @@
 package com.fyp.vasclinicserver.model;
 
+import com.fyp.vasclinicserver.model.audit.UserBaseEntity;
 import com.fyp.vasclinicserver.model.enums.SurveyType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class SurveyQuestion {
+public class SurveyQuestion extends UserBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
