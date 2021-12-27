@@ -2,7 +2,7 @@ package com.fyp.vasclinicserver.service;
 
 import com.fyp.vasclinicserver.payload.NotificationEmail;
 import com.fyp.vasclinicserver.exceptions.NotificationException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class MailService {
     private final JavaMailSender mailSender;

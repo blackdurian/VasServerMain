@@ -37,18 +37,17 @@ import java.util.UUID;
 public class AuthService { //TODO: Refactor to Account module new Server
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
 
-    //signup recipient user
-    public void signup(RegisterRequest registerRequest) {
+
+    public User signup(RegisterRequest registerRequest,Role role) {
         //TODO: convert to mapstruct mapper
         User user = new User();
-        Role role = roleRepository.findByName(RoleName.ROLE_RECIPIENT) .orElseThrow(() -> new VasException("User Role not set."));
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
@@ -60,6 +59,11 @@ public class AuthService { //TODO: Refactor to Account module new Server
         user.setEnabled(false);
         user.setRoles(Collections.singleton(role));
         userRepository.save(user);
+        sendVerificationToken(user);
+        return user;
+    }
+
+    public void sendVerificationToken(User user) {
         String token = generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail("Please Activate your Account",
                 user.getEmail(), "Thank you for signing up to VAS, " +

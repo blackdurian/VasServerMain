@@ -24,9 +24,9 @@ public class PagingMapper {
         return new ObjectMapper().readValue(filter, new TypeReference<Map<String, Object>>() {});
     }
 
-    public static String mapToContextRange(String range, Page<?> pageResult) throws JsonProcessingException {
+    public static String mapToContextRange(String contextName, String range, Page<?> pageResult) throws JsonProcessingException {
         Long totalElements =   pageResult.getTotalElements();
         List<Integer> rangeList = new ObjectMapper().readValue(range, new TypeReference<List<Integer>>() {});
-        return String.format("vaccines %s-%s/%d", rangeList.get(0), rangeList.get(1), totalElements);
+        return String.format("%s %s-%s/%d", contextName, rangeList.get(0), rangeList.get(1), totalElements);
     }
 }

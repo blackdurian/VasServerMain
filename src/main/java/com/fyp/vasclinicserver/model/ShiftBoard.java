@@ -27,4 +27,9 @@ public class ShiftBoard extends UserBaseEntity {
     @Enumerated(EnumType.STRING)
     private ShiftBoardStatus status;
 
+    public ShiftBoard(String name, Clinic clinic, ShiftBoardStatus status) {
+        this.name = name;
+        this.clinic = clinic;
+        this.status = status;
+    }
 }

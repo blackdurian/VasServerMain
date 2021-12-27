@@ -20,10 +20,10 @@ import java.util.List;
 public class ClinicController {
     private final ClinicService clinicService;
 
-@PostMapping
+    @PostMapping
     public ResponseEntity<Void> createClinic(@RequestBody ClinicRequest clinicRequest){
-    clinicService.save(clinicRequest);
-    return new ResponseEntity<>(HttpStatus.CREATED);
+        clinicService.save(clinicRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     //GET http://my.api.url/posts?sort=["title","ASC"]&range=[0, 24]&filter={"title":"bar"}
@@ -35,9 +35,9 @@ public class ClinicController {
     ) {
         try {
             Page<Clinic> pageResult = clinicService.getAllClinics(sort,range,filter);
-            List<Clinic> vaccines = pageResult.getContent();
-            String contextRange = PagingMapper.mapToContextRange(range,pageResult);
-            return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(vaccines);
+            List<Clinic> clinics = pageResult.getContent();
+            String contextRange = PagingMapper.mapToContextRange("clinic", range,pageResult);
+            return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(clinics);
         } catch (JsonProcessingException | NullPointerException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

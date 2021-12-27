@@ -8,4 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/appointment")
 @AllArgsConstructor
 public class AppointmentController {
+    //create appointment
+
+    //view appointment
+
+
 }

@@ -4,6 +4,7 @@ package com.fyp.vasclinicserver.mapper;
 import com.fyp.vasclinicserver.model.Role;
 import com.fyp.vasclinicserver.model.User;
 import com.fyp.vasclinicserver.payload.ProfileResponse;
+import com.fyp.vasclinicserver.payload.RecipientResponse;
 import com.fyp.vasclinicserver.util.TimeUtil;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -23,7 +24,13 @@ public interface UserMapper {
     @Mapping(target = "bod", expression = "java(mapBod(user.getBod()))")
     @Mapping(target = "gender", expression = "java(user.getGender().getLabel())")
     @InheritInverseConfiguration
-    ProfileResponse  userToProfileResponse(User user);
+    ProfileResponse mapToProfileResponse(User user);
+
+    @Mapping(target = "id", source = "username")
+    @Mapping(target = "bod", expression = "java(mapBod(user.getBod()))")
+    @Mapping(target = "gender", expression = "java(user.getGender().getLabel())")
+    @InheritInverseConfiguration
+    RecipientResponse mapToRecipientResponse(User user);
 
     default String mapRoles(Set<Role> roles) {
         return roles.stream().map(role -> role.getName().getLabel()).collect(Collectors.joining(" | "));

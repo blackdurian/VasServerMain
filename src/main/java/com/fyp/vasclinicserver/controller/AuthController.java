@@ -1,12 +1,15 @@
 package com.fyp.vasclinicserver.controller;
 
+import com.fyp.vasclinicserver.exceptions.VasException;
 import com.fyp.vasclinicserver.model.Role;
 import com.fyp.vasclinicserver.model.User;
+import com.fyp.vasclinicserver.model.enums.RoleName;
 import com.fyp.vasclinicserver.payload.*;
+import com.fyp.vasclinicserver.repository.RoleRepository;
 import com.fyp.vasclinicserver.repository.UserRepository;
 import com.fyp.vasclinicserver.service.AuthService;
 import com.fyp.vasclinicserver.service.RefreshTokenService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +23,11 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final RefreshTokenService refreshTokenService;
     @Value("${vas.cors.recipient.url}")
     private String recipientUrl;
@@ -42,8 +46,8 @@ public class AuthController {
             return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
-        authService.signup(registerRequest);
-
+        Role role = roleRepository.findByName(RoleName.ROLE_RECIPIENT) .orElseThrow(() -> new VasException("User Role not set."));
+        authService.signup(registerRequest,role);
         return new ResponseEntity<>("User Registration Successful, activation email sent!!",
                 OK);
     }

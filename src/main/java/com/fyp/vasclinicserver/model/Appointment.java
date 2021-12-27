@@ -35,6 +35,10 @@ public class Appointment extends UserBaseEntity {
     @JoinColumn(name = "shift_id", referencedColumnName = "id")
     private Shift shift;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "clinic_id", referencedColumnName = "id")
+    private Clinic clinic;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "app_enquiry_vaccines",

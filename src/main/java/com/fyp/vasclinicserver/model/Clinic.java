@@ -37,11 +37,10 @@ public class Clinic extends BaseEntity {
 
     @ManyToMany(fetch = LAZY)
     @JoinTable(
-            name = "clinic_staffs",
+            name = "clinic_Employees",
             joinColumns = @JoinColumn(name = "clinic_id"),
             inverseJoinColumns = @JoinColumn(name = "staff_user_id"))
-    private Set<User> clinicStaff = new HashSet<>();
-
+    private Set<User> clinicEmployees = new HashSet<>();
 
     private String suite;
 

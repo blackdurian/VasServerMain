@@ -2,7 +2,6 @@ package com.fyp.vasclinicserver.model;
 
 import com.fyp.vasclinicserver.model.audit.UserBaseEntity;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.Instant;

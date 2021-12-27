@@ -2,7 +2,9 @@ package com.fyp.vasclinicserver.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fyp.vasclinicserver.mapper.PagingMapper;
+import com.fyp.vasclinicserver.mapper.VaccineMapper;
 import com.fyp.vasclinicserver.model.Vaccine;
+import com.fyp.vasclinicserver.payload.VaccineRequest;
 import com.fyp.vasclinicserver.repository.VaccineRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class VaccineService {
 
     private final VaccineRepository vaccineRepository;
+    private final VaccineMapper vaccineMapper;
 
     @Transactional(readOnly = true)
     public Page<Vaccine> getAllVaccine(String sort,String  range, String filter) throws JsonProcessingException {
@@ -41,12 +44,10 @@ public class VaccineService {
     @Transactional(readOnly = true)
     public Vaccine getVaccine(String id) {
         return vaccineRepository.getById(id);
-//                .stream()
-//                .map( )
-//                .collect(toList());
     }
 
-    public void save(Vaccine vaccine) {
+    public void save(VaccineRequest vaccineRequest) {
+        Vaccine vaccine = vaccineMapper.mapToVaccine(vaccineRequest);
         vaccineRepository.save(vaccine);
     }
 }

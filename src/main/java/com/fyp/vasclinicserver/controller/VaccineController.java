@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fyp.vasclinicserver.mapper.PagingMapper;
 import com.fyp.vasclinicserver.model.Vaccine;
 import com.fyp.vasclinicserver.payload.ApiResponse;
+import com.fyp.vasclinicserver.payload.ClinicRequest;
+import com.fyp.vasclinicserver.payload.VaccineRequest;
 import com.fyp.vasclinicserver.service.VaccineService;
 import lombok.AllArgsConstructor;
 
@@ -22,6 +24,12 @@ public class VaccineController {
 
     private final VaccineService vaccineService;
 
+    @PostMapping
+    public ResponseEntity<Void> createVaccine(@RequestBody VaccineRequest vaccineRequest){
+        vaccineService.save(vaccineRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     //GET http://my.api.url/posts?sort=["title","ASC"]&range=[0, 24]&filter={"title":"bar"}
     @GetMapping
     public ResponseEntity<?> getAllVaccines(
@@ -32,7 +40,7 @@ public class VaccineController {
         try {
             Page<Vaccine> pageResult = vaccineService.getAllVaccine(sort,range,filter);
             List<Vaccine> vaccines = pageResult.getContent();
-            String contextRange = PagingMapper.mapToContextRange(range,pageResult);
+            String contextRange = PagingMapper.mapToContextRange("vaccines",range,pageResult);
             return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(vaccines);
         } catch (JsonProcessingException| NullPointerException e) {
             e.printStackTrace();
@@ -47,4 +55,5 @@ public class VaccineController {
                 .status(HttpStatus.OK)
                 .body(vaccineService.getVaccine(id));
     }
+
 }

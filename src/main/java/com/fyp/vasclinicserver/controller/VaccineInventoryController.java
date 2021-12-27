@@ -8,4 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/vaccine/inventory")
 @AllArgsConstructor
 public class VaccineInventoryController {
+    //create
+
+    //view
+
+
 }

@@ -1,13 +1,24 @@
 package com.fyp.vasclinicserver.security;
 
+import com.fyp.vasclinicserver.model.User;
+import com.fyp.vasclinicserver.repository.UserRepository;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
+
 public class SecurityAuditAwareImpl implements AuditorAware<String> {
+
+    private final UserRepository userRepository;
+
+    public SecurityAuditAwareImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public Optional<String> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -17,8 +28,9 @@ public class SecurityAuditAwareImpl implements AuditorAware<String> {
                 authentication instanceof AnonymousAuthenticationToken) {
             return Optional.empty();
         }
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
-        return Optional.ofNullable(userPrincipal.getId());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        System.out.println(userDetails.getUsername());
+        User user =  userRepository.findByUsername(userDetails.getUsername()).orElseThrow(RuntimeException::new);
+        return Optional.ofNullable(user.getId());
     }
 }

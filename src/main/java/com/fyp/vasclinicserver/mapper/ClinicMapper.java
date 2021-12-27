@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface ClinicMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "clinicRequest.name")
-    @Mapping(target = "clinicStaff", ignore = true)
+    @Mapping(target = "clinicEmployees", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "suite", source = "clinicRequest.suite")
     @Mapping(target = "street", source = "clinicRequest.street")

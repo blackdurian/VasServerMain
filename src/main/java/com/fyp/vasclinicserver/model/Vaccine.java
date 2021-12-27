@@ -22,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 })
 
 public class Vaccine extends BaseEntity {
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -44,6 +45,10 @@ public class Vaccine extends BaseEntity {
     private Double  maxStorageDays;
     @NotBlank(message = "Manufacturer company is required")
     private String mfgCompany;
+    private Integer GapDays;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pre_survey_id", referencedColumnName = "id")
+    private Survey preSurvey;
     @JsonIgnore
     private Boolean deleted = Boolean.FALSE;
 }
