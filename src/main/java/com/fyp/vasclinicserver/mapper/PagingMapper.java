@@ -3,10 +3,7 @@ package com.fyp.vasclinicserver.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Map;
@@ -28,5 +25,13 @@ public class PagingMapper {
         Long totalElements =   pageResult.getTotalElements();
         List<Integer> rangeList = new ObjectMapper().readValue(range, new TypeReference<List<Integer>>() {});
         return String.format("%s %s-%s/%d", contextName, rangeList.get(0), rangeList.get(1), totalElements);
+    }
+
+    public static <T> Page<T> mapToPage(List<T> list,Pageable paging){
+        return new PageImpl<>(list, paging, list.size());
+    }
+
+    public static <T> Page<T> mapToPage(List<T> list, String sort, String  range) throws JsonProcessingException {
+        return mapToPage(list,mapToPageable(sort,range));
     }
 }

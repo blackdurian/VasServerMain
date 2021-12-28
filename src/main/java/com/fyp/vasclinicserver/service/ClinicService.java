@@ -51,7 +51,7 @@ public class ClinicService {
     }
 
     public Page<Clinic> getAllClinics(String sort, String range, String filter) throws JsonProcessingException {
-        Pageable paging = getPageable(sort, range);
+        Pageable paging = PagingMapper.mapToPageable(sort,range);
         Map<String, Object> filterNode = getFilterNote(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
         // TODO improve Map<String,Object> filter method involved
@@ -68,7 +68,6 @@ public class ClinicService {
 
 
     public Page<EmployeeResponse> getAllEmployeesByClinic(String sort, String range, String filter) throws JsonProcessingException {
-        Pageable paging = getPageable(sort, range);
         Map<String, Object> filterNode = getFilterNote(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
 
@@ -96,15 +95,11 @@ public class ClinicService {
                employees = employees.stream().filter(c->c.getRoles().contains((String)value)).collect(Collectors.toList());
             }
         }
-        return new PageImpl<>(employees, paging, employees.size());
+        return PagingMapper.mapToPage(employees,sort,range);
     }
 
     private Map<String, Object> getFilterNote(String filter) throws JsonProcessingException {
         return PagingMapper.mapToFilterNode(filter);
-    }
-
-    private Pageable getPageable(String sort, String range) throws JsonProcessingException {
-        return PagingMapper.mapToPageable(sort, range);
     }
 
     public void createDoctor(RegisterRequest registerRequest) {

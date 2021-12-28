@@ -51,7 +51,7 @@ public class UserService {
     }
 
     public Page<RecipientResponse> getAllRecipients(String sort, String range, String filter) throws JsonProcessingException {
-        Pageable paging = getPageable(sort, range);
+        Pageable paging = PagingMapper.mapToPageable(sort, range);
         Map<String, Object> filterNode = getFilterNote(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
         String roleName = RoleName.ROLE_RECIPIENT.name();
@@ -71,12 +71,7 @@ public class UserService {
         return PagingMapper.mapToFilterNode(filter);
     }
 
-    private Pageable getPageable(String sort, String range) throws JsonProcessingException {
-        return PagingMapper.mapToPageable(sort, range);
-    }
-
     public Page<RecipientResponse> getCurrentClinicRecipients(String sort, String range, String filter)  throws JsonProcessingException {
-        Pageable paging = getPageable(sort, range);
         Map<String, Object> filterNode = getFilterNote(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
         User admin = authService.getCurrentUser();
@@ -94,7 +89,7 @@ public class UserService {
                 recipientList =  recipientList.stream().filter(r->r.getId().contains((String)value)).collect(Collectors.toList());
             }
         }
-        return new PageImpl<>(recipientList, paging, recipientList.size());
+        return PagingMapper.mapToPage(recipientList,sort,range);
     }
 
 }

@@ -22,8 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -51,21 +53,23 @@ public class ShiftService {
     }
 
     public Page<ShiftResponse> getCurrentClinicShifts(String sort, String range, String filter) throws JsonProcessingException {
-        Pageable paging = PagingMapper.mapToPageable(sort, range);
+        // TODO improve Map<String,Object> filter method involved
         Map<String, Object> filterNode =  PagingMapper.mapToFilterNode(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
         Clinic clinic = clinicService.getCurrentClinic();
-        // TODO improve Map<String,Object> filter method involved
-        Page<Shift> shifts = shiftRepository.findByClinic(clinic,paging);
+        System.out.println(clinic.getCity());
+        List<Shift> shifts  = shiftRepository.findByShiftBoard_Clinic(clinic);
+        System.out.println("maea");
         if (firstKey.isPresent()) {
             String key = firstKey.get();
             Object value = filterNode.get(key);
             if(key.equals("status")&& value instanceof String){
                 ShiftBoardStatus status = ShiftBoardStatus.valueOf( ((String) value).toUpperCase());
-                shifts = shiftRepository.findByClinicAndStatus(clinic, status,paging);
+                shifts = shiftRepository.findByShiftBoard_ClinicAndShiftBoard_Status(clinic,status);
             }
         }
-        return shifts.map(shiftMapper::mapToShiftResponse);
+        List<ShiftResponse> shiftResponses =shifts.stream().map(shiftMapper::mapToShiftResponse).collect(Collectors.toList());
+        return PagingMapper.mapToPage(shiftResponses,sort,range);
     }
 
 }
