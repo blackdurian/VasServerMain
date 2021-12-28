@@ -28,7 +28,7 @@ public class ShiftController {
 
     //TODO: create recurring shift
 
-    @GetMapping("/clinic")
+    @GetMapping()
     public ResponseEntity<?> getCurrentClinicShifts(
             @RequestParam(value = "sort",  defaultValue = "[\"id\",\"ASC\"]" ) String sort,
             @RequestParam(value = "range",  defaultValue = "[0,9]")  String  range,
