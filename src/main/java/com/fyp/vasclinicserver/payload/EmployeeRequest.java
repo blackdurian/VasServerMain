@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeResponse {
-    private String id; // username in font end
+public class EmployeeRequest {
     private String name;
+    private String username;
+    private String password;
     private String email;
     private String gender;
     private String bod;
-    private String roles;
-    private String clinicId;
-    private boolean verified;
+    private String role;
+
 }
