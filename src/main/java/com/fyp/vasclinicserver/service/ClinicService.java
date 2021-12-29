@@ -10,6 +10,7 @@ import com.fyp.vasclinicserver.model.Role;
 import com.fyp.vasclinicserver.model.User;
 import com.fyp.vasclinicserver.model.enums.RoleName;
 import com.fyp.vasclinicserver.payload.ClinicRequest;
+import com.fyp.vasclinicserver.payload.EmployeeRequest;
 import com.fyp.vasclinicserver.payload.EmployeeResponse;
 import com.fyp.vasclinicserver.payload.RegisterRequest;
 import com.fyp.vasclinicserver.repository.ClinicRepository;
@@ -65,8 +66,6 @@ public class ClinicService {
         return clinicRepository.findByDeletedFalse(paging);
     }
 
-
-
     public Page<EmployeeResponse> getAllEmployeesByClinic(String sort, String range, String filter) throws JsonProcessingException {
         Map<String, Object> filterNode = getFilterNote(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
@@ -75,18 +74,8 @@ public class ClinicService {
         Clinic clinic = getCurrentClinic();
         List<User> clinicEmployee = new ArrayList<>(clinic.getClinicEmployees());
         clinicEmployee.add(admin);
-        //TODO : refactor to mapper
         List<EmployeeResponse> employees = clinicEmployee.stream()
-                .map((employee) -> {
-                    String roles = userMapper.mapRoles(employee.getRoles());
-                    return new EmployeeResponse(
-                            employee.getUsername(),
-                            employee.getName(), employee.getEmail(),
-                            employee.getGender().getLabel(),
-                            userMapper.mapBod(employee.getBod()),
-                            roles,
-                            clinic.getId());
-                })
+                .map((User user) -> userMapper.mapToEmployeeResponse(user,clinic))
                 .collect(Collectors.toList());
         if (firstKey.isPresent()) {
             String key = firstKey.get();
@@ -102,13 +91,12 @@ public class ClinicService {
         return PagingMapper.mapToFilterNode(filter);
     }
 
+
     public void createDoctor(RegisterRequest registerRequest) {
         Clinic clinic = getCurrentClinic();
         Role role = roleRepository.findByName(RoleName.ROLE_CLINIC_DOCTOR) .orElseThrow(() -> new VasException("User Role not set."));
         User user = authService.signup(registerRequest,role);
-        Set<User> clinicEmployees = new HashSet<>(clinic.getClinicEmployees());
-        clinicEmployees.add(user);
-        clinic.setClinicEmployees(clinicEmployees);
+        clinic.getClinicEmployees().add(user);
         clinicRepository.save(clinic);
     }
 
@@ -122,5 +110,15 @@ public class ClinicService {
         authService.signup(registerRequest, role);
     }
 
-
+    //TODO: add role to exist User
+    public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
+        RegisterRequest registerRequest = userMapper.mapToRegisterRequest(employeeRequest);
+        Role role = roleRepository.findByName(RoleName.valueOf(employeeRequest.getRole())) .orElseThrow(() -> new VasException("User Role not set."));
+        authService.signup(registerRequest, role);
+        User user = userRepository.findByUsername(employeeRequest.getUsername()).orElseThrow(() -> new VasException("Internal error: unable to save user"));
+        Clinic clinic = getCurrentClinic();
+        clinic.getClinicEmployees().add(user);
+        clinicRepository.save(clinic);
+        return userMapper.mapToEmployeeResponse(user,clinic);
+    }
 }
