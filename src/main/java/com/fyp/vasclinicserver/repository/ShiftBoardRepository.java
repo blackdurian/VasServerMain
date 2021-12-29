@@ -16,4 +16,7 @@ public interface ShiftBoardRepository  extends JpaRepository<ShiftBoard, Long> {
     Page<ShiftBoard> findByClinic(Clinic clinic, Pageable pageable);
 
     Page<ShiftBoard> findByClinicAndStatus(Clinic clinic, ShiftBoardStatus status, Pageable pageable);
+
+    boolean existsByNameAndClinic(String name, Clinic clinic);
+
 }
