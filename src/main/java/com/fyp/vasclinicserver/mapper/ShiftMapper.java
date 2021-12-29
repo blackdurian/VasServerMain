@@ -12,14 +12,14 @@ import java.time.Instant;
 public interface ShiftMapper {
 
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "start", expression = "java(mapStringDate(shift.getStart()))")
-    @Mapping(target = "end", expression = "java(mapStringDate(shift.getEnd()))")
+    @Mapping(target = "start", expression = "java(mapToStringDate(shift.getStart()))")
+    @Mapping(target = "end", expression = "java(mapToStringDate(shift.getEnd()))")
     @Mapping(target = "doctor", source = "doctor.username")
     @Mapping(target = "shiftBoard", source = "shiftBoard.id")
     @Mapping(target = "enabled", source = "enabled")
     ShiftResponse mapToShiftResponse(Shift shift);
 
-    default String mapStringDate(Instant date) {
+    default String mapToStringDate(Instant date) {
         return TimeUtil.convertInstantToStringDate(date, TimeUtil.DATE_TIME_FORMAT);
     }
 
