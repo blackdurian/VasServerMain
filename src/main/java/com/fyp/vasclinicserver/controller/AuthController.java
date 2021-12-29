@@ -61,14 +61,14 @@ public class AuthController {
             switch (role.get().getName()){
                 case ROLE_CLINIC_DOCTOR:
                 case ROLE_CLINIC_ADMIN:
-                    loginUrl= clinicUrl+ "/api/auth/login";
+                    loginUrl= clinicUrl+ "/login";
                     break;
                 case ROLE_GOVT_AGENCY:
-                    loginUrl= govtagencyUrl+ "/api/auth/login";
+                    loginUrl= govtagencyUrl+ "/login";
                     break;
                 case ROLE_RECIPIENT:
                 default:
-                    loginUrl= recipientUrl+ "/api/auth/login";
+                    loginUrl= recipientUrl+ "/login";
                     break;
             }
         }
