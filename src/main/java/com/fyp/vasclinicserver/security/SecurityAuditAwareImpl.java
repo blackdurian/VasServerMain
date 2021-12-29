@@ -29,7 +29,6 @@ public class SecurityAuditAwareImpl implements AuditorAware<String> {
             return Optional.empty();
         }
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        System.out.println(userDetails.getUsername());
         User user =  userRepository.findByUsername(userDetails.getUsername()).orElseThrow(RuntimeException::new);
         return Optional.ofNullable(user.getId());
     }
