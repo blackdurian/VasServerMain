@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @AllArgsConstructor
@@ -67,9 +68,6 @@ public class ClinicService {
     }
 
     public Page<EmployeeResponse> getAllEmployeesByClinic(String sort, String range, String filter) throws JsonProcessingException {
-        Map<String, Object> filterNode = getFilterNote(filter);
-        Optional<String> firstKey = filterNode.keySet().stream().findFirst();
-
         User admin = authService.getCurrentUser();
         Clinic clinic = getCurrentClinic();
         List<User> clinicEmployee = new ArrayList<>(clinic.getClinicEmployees());
@@ -77,12 +75,31 @@ public class ClinicService {
         List<EmployeeResponse> employees = clinicEmployee.stream()
                 .map((User user) -> userMapper.mapToEmployeeResponse(user,clinic))
                 .collect(Collectors.toList());
-        if (firstKey.isPresent()) {
-            String key = firstKey.get();
-            Object value = filterNode.get(key);
-            if (key.equals("role") && value instanceof String) {
-               employees = employees.stream().filter(c->c.getRoles().contains((String)value)).collect(Collectors.toList());
+        //filter
+        Map<String, Object> filterNode = getFilterNote(filter);
+        Set<String> keys = filterNode.keySet();
+        if (keys.size()>0) {
+            String[] qKeys = new String[] { "q", "roles"};
+            if(keys.contains(qKeys[0])){
+                Object value = filterNode.get(qKeys[0]);
+            if (value instanceof String&& !(((String) value).trim()).isEmpty()){
+                    employees = employees.stream()
+                            .filter(c -> c.getRoles().contains((String) value)
+                                    || c.getEmail().contains((String) value)
+                                    || c.getName().contains((String) value)
+                                    || c.getId().contains((String) value)
+                            ).collect(Collectors.toList());
+                }
             }
+            if(keys.contains(qKeys[1])){
+                Object value = filterNode.get(qKeys[1]);
+                if (value instanceof String&& !(((String) value).trim()).isEmpty()){
+                    employees = employees.stream()
+                            .filter(c -> c.getRoles().contains((String) value)
+                            ).collect(Collectors.toList());
+                }
+            }
+
         }
         return PagingMapper.mapToPage(employees,sort,range);
     }
@@ -114,6 +131,7 @@ public class ClinicService {
     public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
         RegisterRequest registerRequest = userMapper.mapToRegisterRequest(employeeRequest);
         Role role = roleRepository.findByName(RoleName.valueOf(employeeRequest.getRole())) .orElseThrow(() -> new VasException("User Role not set."));
+        System.out.println(employeeRequest.getGender());
         authService.signup(registerRequest, role);
         User user = userRepository.findByUsername(employeeRequest.getUsername()).orElseThrow(() -> new VasException("Internal error: unable to save user"));
         Clinic clinic = getCurrentClinic();
@@ -121,4 +139,6 @@ public class ClinicService {
         clinicRepository.save(clinic);
         return userMapper.mapToEmployeeResponse(user,clinic);
     }
+
+
 }

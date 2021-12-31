@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShiftBoardRequest {
+public class SelectInputRequest {
+    private String id;
     private String name;
 }

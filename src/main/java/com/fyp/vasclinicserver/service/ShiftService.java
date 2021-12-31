@@ -18,7 +18,6 @@ import com.fyp.vasclinicserver.util.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,18 +37,21 @@ public class ShiftService {
     private final ShiftMapper shiftMapper;
     private final ClinicService clinicService;
 
-    public void save(ShiftRequest shiftRequest){
+    public ShiftResponse save(ShiftRequest shiftRequest){
         User doctor = userRepository.findByUsername(shiftRequest.getDoctor())
                 .orElseThrow(() -> new VasException(shiftRequest.getDoctor()+ " doctor no found"));
         ShiftBoard shiftBoard = shiftBoardRepository.findById(shiftRequest.getShiftBoard())
                 .orElseThrow(() -> new VasException(shiftRequest.getDoctor()+ " shiftBoard no found"));
         Shift shift = new Shift();
-        shift.setStart(TimeUtil.convertStringDateToInstant(shiftRequest.getStart(), TimeUtil.DATE_TIME_FORMAT));
-        shift.setEnd(TimeUtil.convertStringDateToInstant(shiftRequest.getEnd(), TimeUtil.DATE_TIME_FORMAT));
+        shift.setStart(TimeUtil.convertStringDateTimeToInstant(shiftRequest.getStart(), TimeUtil.OFFSET_DATE_TIME_FORMAT));
+        shift.setEnd(TimeUtil.convertStringDateTimeToInstant(shiftRequest.getEnd(), TimeUtil.OFFSET_DATE_TIME_FORMAT));
+        System.out.println(shift.getStart());
+        //TODO::date valid
         shift.setDoctor(doctor);
         shift.setEnabled(true);
         shift.setShiftBoard(shiftBoard);
-        shiftRepository.save(shift);
+        Shift newShift =  shiftRepository.save(shift);
+        return shiftMapper.mapToShiftResponse(newShift);
     }
 
     public Page<ShiftResponse> getCurrentClinicShifts(String sort, String range, String filter) throws JsonProcessingException {
@@ -59,11 +61,10 @@ public class ShiftService {
         Clinic clinic = clinicService.getCurrentClinic();
         System.out.println(clinic.getCity());
         List<Shift> shifts  = shiftRepository.findByShiftBoard_Clinic(clinic);
-        System.out.println("maea");
         if (firstKey.isPresent()) {
             String key = firstKey.get();
             Object value = filterNode.get(key);
-            if(key.equals("status")&& value instanceof String){
+            if(key.equals("q")&& value instanceof String){
                 ShiftBoardStatus status = ShiftBoardStatus.valueOf( ((String) value).toUpperCase());
                 shifts = shiftRepository.findByShiftBoard_ClinicAndShiftBoard_Status(clinic,status);
             }

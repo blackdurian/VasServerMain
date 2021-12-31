@@ -17,7 +17,8 @@ import java.time.Instant;
         allowGetters = true
 )
 public abstract class BaseEntity implements Serializable {
-
+/*    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZZ")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern ="yyyy-MM-dd'T'HH:mm:ss.SSSZZ", timezone = "UTC")*/
     @CreatedDate
     private Instant createdAt;
 

@@ -1,7 +1,7 @@
 package com.fyp.vasclinicserver.mapper;
 
 import com.fyp.vasclinicserver.model.ShiftBoard;
-import com.fyp.vasclinicserver.payload.ShiftBoardResponse;
+import com.fyp.vasclinicserver.payload.shiftboard.ShiftBoardResponse;
 import com.fyp.vasclinicserver.util.TimeUtil;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -17,6 +17,6 @@ public interface ShiftBoardMapper {
     ShiftBoardResponse mapToShiftBoardResponse(ShiftBoard shiftBoard);
 
     default String mapToStringDate(Instant date) {
-        return TimeUtil.convertInstantToStringDate(date, TimeUtil.DATE_TIME_FORMAT);
+        return TimeUtil.convertInstantToStringDateTime(date, TimeUtil.OFFSET_DATE_TIME_FORMAT);
     }
 }

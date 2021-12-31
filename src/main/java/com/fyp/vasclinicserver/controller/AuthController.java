@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -52,7 +55,7 @@ public class AuthController {
                 OK);
     }
 
-    @GetMapping("accountVerification/{token}")
+    @GetMapping("/accountVerification/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
        User user = authService.verifyAccount(token);
         Optional<Role> role = user.getRoles().stream().findFirst();
@@ -90,6 +93,12 @@ public class AuthController {
     public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
         refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");
+    }
+
+    @PostMapping("/user/role")
+    public ResponseEntity<?> getCurrentUserRole(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        List<String> roles = authService.getCurrentUserRole(refreshTokenRequest);
+        return ResponseEntity.status(OK).body(roles);
     }
 
 }

@@ -20,7 +20,7 @@ public interface ShiftMapper {
     ShiftResponse mapToShiftResponse(Shift shift);
 
     default String mapToStringDate(Instant date) {
-        return TimeUtil.convertInstantToStringDate(date, TimeUtil.DATE_TIME_FORMAT);
+        return TimeUtil.convertInstantToStringDateTime(date, TimeUtil.OFFSET_DATE_TIME_FORMAT);
     }
 
 }

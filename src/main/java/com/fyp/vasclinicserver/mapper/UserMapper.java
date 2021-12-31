@@ -49,6 +49,6 @@ public interface UserMapper {
         return roles.stream().map(role -> role.getName().getLabel()).collect(Collectors.joining(" | "));
     }
     default String mapBod(Instant bod) {
-        return TimeUtil.convertInstantToStringDate(bod, TimeUtil.BOD_FORMAT);
+        return TimeUtil.convertInstantToStringDateTime(bod, TimeUtil.BOD_FORMAT);
     }
 }

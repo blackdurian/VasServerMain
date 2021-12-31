@@ -5,9 +5,7 @@ import com.fyp.vasclinicserver.model.Role;
 import com.fyp.vasclinicserver.model.User;
 import com.fyp.vasclinicserver.model.VerificationToken;
 import com.fyp.vasclinicserver.model.enums.Gender;
-import com.fyp.vasclinicserver.model.enums.RoleName;
 import com.fyp.vasclinicserver.exceptions.VasException;
-import com.fyp.vasclinicserver.repository.RoleRepository;
 import com.fyp.vasclinicserver.repository.UserRepository;
 import com.fyp.vasclinicserver.repository.VerificationTokenRepository;
 import com.fyp.vasclinicserver.security.JwtProvider;
@@ -26,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -137,4 +137,11 @@ public class AuthService { //TODO: Refactor to Account module new Server
         return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 
+    public List<String> getCurrentUserRole(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        User user =  userRepository.findByUsername(refreshTokenRequest.getUsername()).orElseThrow(() -> new VasException("User not found with name - " + refreshTokenRequest.getUsername()));
+        return user.getRoles().stream()
+                .map(role -> role.getName().name())
+                .collect(Collectors.toList());
+    }
 }

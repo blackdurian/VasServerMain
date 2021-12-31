@@ -27,5 +27,5 @@ public interface UserRepository extends JpaRepository<User,String> {
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
-
+//    @Query(value = "SELECT emp.* FROM employee emp WHERE MATCH (emp.first_name, emp.address, emp.passport_no) AGAINST (:lastName IN NATURAL LANGUAGE MODE)", nativeQuery = true)
 }

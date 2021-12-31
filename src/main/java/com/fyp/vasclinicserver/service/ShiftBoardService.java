@@ -1,6 +1,7 @@
 package com.fyp.vasclinicserver.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fyp.vasclinicserver.exceptions.ResourceNotFoundException;
 import com.fyp.vasclinicserver.mapper.PagingMapper;
 import com.fyp.vasclinicserver.mapper.ShiftBoardMapper;
 import com.fyp.vasclinicserver.model.Clinic;
@@ -8,8 +9,9 @@ import com.fyp.vasclinicserver.model.ShiftBoard;
 
 import com.fyp.vasclinicserver.model.enums.ShiftBoardStatus;
 
-import com.fyp.vasclinicserver.payload.ShiftBoardRequest;
-import com.fyp.vasclinicserver.payload.ShiftBoardResponse;
+import com.fyp.vasclinicserver.payload.shiftboard.ShiftBoardPostRequest;
+import com.fyp.vasclinicserver.payload.shiftboard.ShiftBoardPutRequest;
+import com.fyp.vasclinicserver.payload.shiftboard.ShiftBoardResponse;
 import com.fyp.vasclinicserver.repository.ShiftBoardRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +32,9 @@ public class ShiftBoardService {
     private final ClinicService clinicService;
     private final ShiftBoardMapper shiftBoardMapper;
 
-    public ShiftBoardResponse save(ShiftBoardRequest shiftBoardRequest) {
+    public ShiftBoardResponse save(ShiftBoardPostRequest shiftBoardPostRequest) {
         Clinic clinic = clinicService.getCurrentClinic();
-        ShiftBoard shiftBoard = new ShiftBoard(shiftBoardRequest.getName(),clinic, ShiftBoardStatus.DRAFT);
+        ShiftBoard shiftBoard = new ShiftBoard(shiftBoardPostRequest.getName(),clinic, ShiftBoardStatus.DRAFT);
         shiftBoardRepository.save(shiftBoard);
         return shiftBoardMapper.mapToShiftBoardResponse(shiftBoard);
     }
@@ -54,5 +56,25 @@ public class ShiftBoardService {
         return shiftBoards.map(shiftBoardMapper::mapToShiftBoardResponse);
     }
 
+    public ShiftBoardResponse getOneShiftBoards(Long id) {
+        //TODO: validate current ROLE and staff from related clinic
+        ShiftBoard shiftBoard = shiftBoardRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("ShiftBoards","id",id));
+        return shiftBoardMapper.mapToShiftBoardResponse(shiftBoard);
+    }
 
+    public ShiftBoardResponse deleteShiftBoards(Long id) {
+        //TODO: Soft delete
+        return null;
+
+    }
+
+    @Transactional
+    public ShiftBoardResponse updateShiftBoards(ShiftBoardResponse shiftBoardPutRequest, Long id) {
+        ShiftBoard shiftBoard = shiftBoardRepository.getById(id);
+        // TODO: wrap to mapper.updateShiftBoards
+        shiftBoard.setName(shiftBoardPutRequest.getName());
+        shiftBoard.setStatus(ShiftBoardStatus.valueOf(shiftBoardPutRequest.getStatus()));
+        ShiftBoard updatedShiftBoard = shiftBoardRepository.save(shiftBoard);
+        return shiftBoardMapper.mapToShiftBoardResponse(updatedShiftBoard);
+    }
 }

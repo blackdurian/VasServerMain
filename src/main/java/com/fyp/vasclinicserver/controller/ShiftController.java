@@ -21,9 +21,10 @@ import java.util.List;
 public class ShiftController {
     private final ShiftService shiftService;
     @PostMapping
-    public ResponseEntity<Void> createShift(@RequestBody ShiftRequest shiftRequest){
-        shiftService.save(shiftRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ShiftResponse> createShift(@RequestBody ShiftRequest shiftRequest){
+        //validate start end time conflict
+        ShiftResponse response = shiftService.save(shiftRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     //TODO: create recurring shift

@@ -21,6 +21,7 @@ public class SecurityAuditAwareImpl implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
+        User user = null;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null ||
@@ -28,8 +29,9 @@ public class SecurityAuditAwareImpl implements AuditorAware<String> {
                 authentication instanceof AnonymousAuthenticationToken) {
             return Optional.empty();
         }
+
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user =  userRepository.findByUsername(userDetails.getUsername()).orElseThrow(RuntimeException::new);
-        return Optional.ofNullable(user.getId());
+      //   user =  userRepository.findByUsername(userDetails.getUsername()).orElseThrow(RuntimeException::new);
+        return Optional.ofNullable(userDetails.getUsername());
     }
 }
