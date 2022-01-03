@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/vaccine/record")
 @AllArgsConstructor
 public class VaccineRecordController {
-// create
+    // create
+
+
     // view
 
 

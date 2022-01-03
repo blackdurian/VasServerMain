@@ -46,8 +46,7 @@ public class VaccineService {
         return vaccineRepository.getById(id);
     }
 
-    public void save(VaccineRequest vaccineRequest) {
-        Vaccine vaccine = vaccineMapper.mapToVaccine(vaccineRequest);
-        vaccineRepository.save(vaccine);
+    public Vaccine save(VaccineRequest vaccineRequest) {
+        return vaccineRepository.save(vaccineMapper.mapToVaccine(vaccineRequest));
     }
 }

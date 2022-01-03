@@ -38,9 +38,9 @@ public interface UserMapper {
     @Mapping(target = "gender", expression = "java(user.getGender().getLabel())")
     @Mapping(target = "bod", expression = "java(mapBod(user.getBod()))")
     @Mapping(target = "roles", expression = "java(mapRoles(user.getRoles()))")
-    @Mapping(target = "clinicId", source = "clinic.id")
+    @Mapping(target = "clinicId", source = "clinicId")
     @Mapping(target = "verified", source = "user.enabled")
-    EmployeeResponse mapToEmployeeResponse(User user, Clinic clinic);
+    EmployeeResponse mapToEmployeeResponse(User user, String clinicId);
 
     @InheritInverseConfiguration
     RegisterRequest mapToRegisterRequest(EmployeeRequest employeeRequest);

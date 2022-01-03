@@ -2,6 +2,7 @@ package com.fyp.vasclinicserver.repository;
 
 import com.fyp.vasclinicserver.model.User;
 import com.fyp.vasclinicserver.model.Vaccine;
+import com.fyp.vasclinicserver.model.enums.RoleName;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,9 +13,11 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,String> {
-    Page<User> findByRoles_Name(String name,Pageable pageable);
+    Page<User> findByRoles_Name(RoleName name,Pageable pageable);
 
-    Page<User> findByUsernameContainingIgnoreCaseAndRoles_Name(String username,String name,Pageable pageable);
+    Page<User> findByUsernameContainingIgnoreCaseAndRoles_Name(String username,RoleName name,Pageable pageable);
+
+    List<User> findByRoles_Name(RoleName name);
 
     Optional<User> findByEmail(String email);
 

@@ -3,6 +3,8 @@ package com.fyp.vasclinicserver.mapper;
 import com.fyp.vasclinicserver.model.Clinic;
 import com.fyp.vasclinicserver.model.User;
 import com.fyp.vasclinicserver.payload.ClinicRequest;
+import com.fyp.vasclinicserver.payload.ClinicResponse;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -20,4 +22,9 @@ public interface ClinicMapper {
     @Mapping(target = "latitude", source = "clinicRequest.latitude")
     @Mapping(target = "admin", source = "admin")
     Clinic mapToClinic(ClinicRequest clinicRequest, User admin);
+
+    @Mapping(target = "admin", source = "admin.username")
+    @InheritInverseConfiguration
+    ClinicResponse mapToClinicResponse(Clinic clinic);
+
 }

@@ -15,7 +15,7 @@ public class VaccineRequest {
     @NotBlank(message = "Doses Per Vial is required")
     private Integer dosesPerVial;
     @NotBlank(message = "Storage Temperature Upper Bound in Celsius is required")
-    private Integer storageTempUpperBound;
+    private Double storageTempUpperBound;
     @NotBlank(message = "Storage Temperature Lower Bound in Celsius is required")
     private Double  storageTempLowerBound;
     @NotBlank(message = "Max Storage Days is required")
@@ -23,5 +23,5 @@ public class VaccineRequest {
     @NotBlank(message = "Manufacturer company is required")
     private String mfgCompany;
     @NotBlank(message = "Gap of days between vaccines is required")
-    private Integer GapDays;
+    private Integer gapDays;
 }

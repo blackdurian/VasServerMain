@@ -28,9 +28,9 @@ public class ClinicController {
 
 
     @PostMapping
-    public ResponseEntity<Void> createClinic(@RequestBody ClinicRequest clinicRequest){
-        clinicService.save(clinicRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> createClinic(@RequestBody ClinicRequest clinicRequest){
+        ClinicResponse response = clinicService.save(clinicRequest);
+        return  ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     //GET http://my.api.url/posts?sort=["title","ASC"]&range=[0, 24]&filter={"title":"bar"}
@@ -41,8 +41,8 @@ public class ClinicController {
             @RequestParam(value = "filter",  defaultValue = "{}")  String filter
     ) {
         try {
-            Page<Clinic> pageResult = clinicService.getAllClinics(sort,range,filter);
-            List<Clinic> clinics = pageResult.getContent();
+            Page<ClinicResponse> pageResult = clinicService.getAllClinics(sort,range,filter);
+            List<ClinicResponse> clinics = pageResult.getContent();
             String contextRange = PagingMapper.mapToContextRange("clinic", range,pageResult);
             return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(clinics);
         } catch (JsonProcessingException | NullPointerException e) {
@@ -93,36 +93,59 @@ public class ClinicController {
                     HttpStatus.BAD_REQUEST);
         }
         EmployeeResponse response = clinicService.createEmployee(employeeRequest);
-        return  ResponseEntity.status(HttpStatus.OK).body(response);
+        return  ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/doctor")
-    public ResponseEntity<?>createDoctor(@RequestBody RegisterRequest registerRequest){
 
-        if(userRepository.existsByUsername(registerRequest.getUsername())) {
+    @PostMapping("/admins")
+    public ResponseEntity<?>createAdmin(@RequestBody EmployeeRequest employeeRequest){
+        if(userRepository.existsByUsername(employeeRequest.getUsername())) {
             return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
-        if(userRepository.existsByEmail(registerRequest.getEmail())) {
+        if(userRepository.existsByEmail(employeeRequest.getEmail())) {
             return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
-        clinicService.createDoctor(registerRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        EmployeeResponse response = clinicService.createAdmin(employeeRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/admin")
-    public ResponseEntity<?>createAdmin(@RequestBody RegisterRequest registerRequest){
+    @GetMapping("/admins")
+    @PreAuthorize("hasRole('ROLE_GOVT_AGENCY')")
+    public ResponseEntity<?>getAllClinicAdmins(
+            @RequestParam(value = "sort",  defaultValue = "[\"id\",\"ASC\"]" ) String sort,
+            @RequestParam(value = "range",  defaultValue = "[0,9]")  String  range,
+            @RequestParam(value = "filter",  defaultValue = "{}")  String filter
+    ){
+        try {
+            Page<EmployeeResponse> pageResult = clinicService.getAllClinicAdmins(sort,range,filter);
+            List<EmployeeResponse> employees = pageResult.getContent();
+            String contextRange = PagingMapper.mapToContextRange("employees", range, pageResult);
+            return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(employees);
+        } catch (JsonProcessingException | NullPointerException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error Message" + e.getMessage());
+        }
+    }
 
-        if(userRepository.existsByUsername(registerRequest.getUsername())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
+    @GetMapping("/admins/selectInput")
+    @PreAuthorize("hasRole('ROLE_GOVT_AGENCY')")
+    public ResponseEntity<?>getAdminsSelectInput(
+            @RequestParam(value = "sort",  defaultValue = "[\"id\",\"ASC\"]" ) String sort,
+            @RequestParam(value = "range",  defaultValue = "[0,9]")  String  range,
+            @RequestParam(value = "filter",  defaultValue = "{}")  String filter
+    ){
+        try {
+            Page<EmployeeResponse> pageResult = clinicService.getAdminsSelectInput(sort,range,filter);
+            List<EmployeeResponse> employees = pageResult.getContent();
+            String contextRange = PagingMapper.mapToContextRange("employees", range, pageResult);
+            return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(employees);
+        } catch (JsonProcessingException | NullPointerException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error Message" + e.getMessage());
         }
-        if(userRepository.existsByEmail(registerRequest.getEmail())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-        clinicService.createAdmin(registerRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -20,6 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor
 @Entity
 public class Clinic extends BaseEntity {
+    //TODO: separate index id and UUID
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(

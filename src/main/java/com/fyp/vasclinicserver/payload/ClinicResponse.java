@@ -1,5 +1,6 @@
 package com.fyp.vasclinicserver.payload;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,10 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {
-    //TODO move address to related fields
+public class ClinicResponse {
+    private String id;
+    private String name;
+    private String admin; //username
     private String suite;
-    private String  street;
+    private String street;
     private String city;
     private String zipcode;
     private double longitude;

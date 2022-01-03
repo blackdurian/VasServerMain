@@ -25,9 +25,9 @@ public class VaccineController {
     private final VaccineService vaccineService;
 
     @PostMapping
-    public ResponseEntity<Void> createVaccine(@RequestBody VaccineRequest vaccineRequest){
-        vaccineService.save(vaccineRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Vaccine> createVaccine(@RequestBody VaccineRequest vaccineRequest){
+        Vaccine response = vaccineService.save(vaccineRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     //GET http://my.api.url/posts?sort=["title","ASC"]&range=[0, 24]&filter={"title":"bar"}

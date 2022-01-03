@@ -9,18 +9,16 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "vaccines", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "name"
-        })
-})
-
+@Table(name = "vaccines")
 public class Vaccine extends BaseEntity {
 
     @Id
@@ -32,20 +30,20 @@ public class Vaccine extends BaseEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
     @NotBlank(message = "Vaccine name is required")
-    private String name;
-    @NotBlank(message = "Number of dose is required")
+    private String name; //TODO: Refactor Vaccine Name to new table
+    @Positive
     private Integer doseRequire;
-    @NotBlank(message = "Doses Per Vial is required")
+    @Positive
     private Integer dosesPerVial;
-    @NotBlank(message = "Storage Temperature Upper Bound in Celsius is required")
-    private Integer storageTempUpperBound;
-    @NotBlank(message = "Storage Temperature Lower Bound in Celsius is required")
+    private Double storageTempUpperBound;
     private Double  storageTempLowerBound;
-    @NotBlank(message = "Max Storage Days is required")
-    private Double  maxStorageDays;
+    @Positive
+    private Long  maxStorageDays;
     @NotBlank(message = "Manufacturer company is required")
     private String mfgCompany;
-    private Integer GapDays;
+    @Positive
+    private Integer gapDays;
     @JsonIgnore
     private Boolean deleted = Boolean.FALSE;
+    //TODO: Vaccine dependency
 }

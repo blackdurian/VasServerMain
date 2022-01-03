@@ -54,7 +54,7 @@ public class UserService {
         Pageable paging = PagingMapper.mapToPageable(sort, range);
         Map<String, Object> filterNode = getFilterNote(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
-        String roleName = RoleName.ROLE_RECIPIENT.name();
+        RoleName roleName = RoleName.ROLE_RECIPIENT;
         Page<User> recipients = userRepository.findByRoles_Name(roleName,paging);
         if (firstKey.isPresent()) {
             String key = firstKey.get();
