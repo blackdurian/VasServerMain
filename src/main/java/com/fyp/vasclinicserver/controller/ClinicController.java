@@ -8,6 +8,7 @@ import com.fyp.vasclinicserver.payload.*;
 import com.fyp.vasclinicserver.repository.RoleRepository;
 import com.fyp.vasclinicserver.repository.UserRepository;
 import com.fyp.vasclinicserver.service.ClinicService;
+import com.fyp.vasclinicserver.service.VaccineOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,8 @@ import java.util.List;
 @AllArgsConstructor
 public class ClinicController {
     private final ClinicService clinicService;
+    private final VaccineOrderService vaccineOrderService;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
@@ -148,4 +151,6 @@ public class ClinicController {
                     .body("Error Message" + e.getMessage());
         }
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.fyp.vasclinicserver.payload;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -10,6 +11,8 @@ import javax.validation.constraints.NotBlank;
 public class VaccineRequest {
     @NotBlank(message = "Vaccine name is required")
     private String name;
+    @NotBlank(message = "Diseases Ids is required")
+    private List<Long> diseases;
     @NotBlank(message = "Number of dose is required")
     private Integer doseRequire;
     @NotBlank(message = "Doses Per Vial is required")

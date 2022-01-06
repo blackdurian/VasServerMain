@@ -1,5 +1,7 @@
 package com.fyp.vasclinicserver.model;
 
+import com.fyp.vasclinicserver.model.audit.UserBaseEntity;
+import com.fyp.vasclinicserver.model.enums.VaccineOrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,19 +15,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class VaccineOrder {
+public class VaccineOrder extends UserBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "uuid", updatable = false, nullable = false)
     private String uuid;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,4 +33,6 @@ public class VaccineOrder {
 
     private Integer unit;
 
+    @Enumerated(EnumType.STRING)
+    private VaccineOrderStatus status;
 }

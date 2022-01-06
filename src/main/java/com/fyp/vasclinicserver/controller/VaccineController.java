@@ -6,6 +6,7 @@ import com.fyp.vasclinicserver.model.Vaccine;
 import com.fyp.vasclinicserver.payload.ApiResponse;
 import com.fyp.vasclinicserver.payload.ClinicRequest;
 import com.fyp.vasclinicserver.payload.VaccineRequest;
+import com.fyp.vasclinicserver.payload.VaccineResponse;
 import com.fyp.vasclinicserver.service.VaccineService;
 import lombok.AllArgsConstructor;
 
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +27,9 @@ public class VaccineController {
     private final VaccineService vaccineService;
 
     @PostMapping
-    public ResponseEntity<Vaccine> createVaccine(@RequestBody VaccineRequest vaccineRequest){
-        Vaccine response = vaccineService.save(vaccineRequest);
+    @PreAuthorize("hasRole('ROLE_GOVT_AGENCY')")
+    public ResponseEntity<VaccineResponse> createVaccine(@RequestBody VaccineRequest vaccineRequest){
+        VaccineResponse response = vaccineService.save(vaccineRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -38,8 +41,8 @@ public class VaccineController {
                                     @RequestParam(value = "filter",  defaultValue = "{}")  String filter
                                  ) {
         try {
-            Page<Vaccine> pageResult = vaccineService.getAllVaccine(sort,range,filter);
-            List<Vaccine> vaccines = pageResult.getContent();
+            Page<VaccineResponse> pageResult = vaccineService.getAllVaccine(sort,range,filter);
+            List<VaccineResponse> vaccines = pageResult.getContent();
             String contextRange = PagingMapper.mapToContextRange("vaccines",range,pageResult);
             return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(vaccines);
         } catch (JsonProcessingException| NullPointerException e) {
@@ -50,7 +53,7 @@ public class VaccineController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vaccine> findVaccineById(@PathVariable("id") String id) {
+    public ResponseEntity<VaccineResponse> findVaccineById(@PathVariable("id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(vaccineService.getVaccine(id));

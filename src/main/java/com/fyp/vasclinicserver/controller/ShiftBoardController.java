@@ -51,7 +51,7 @@ public class ShiftBoardController {
         try {
             Page<ShiftBoardResponse> pageResult = shiftBoardService.getClinicShiftBoards(sort,range,filter);
             List<ShiftBoardResponse> shiftBoards = pageResult.getContent();
-            String contextRange = PagingMapper.mapToContextRange("clinic", range,pageResult);
+            String contextRange = PagingMapper.mapToContextRange("ShiftBoards", range,pageResult);
             return ResponseEntity.status(HttpStatus.OK).header("Content-Range",contextRange).body(shiftBoards);
         } catch (JsonProcessingException | NullPointerException e) {
             e.printStackTrace();
