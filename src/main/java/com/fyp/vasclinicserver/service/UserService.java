@@ -34,11 +34,10 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class UserService {
-    private final ClinicRepository clinicRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    private final AuthService authService;
+    private final ClinicService clinicService;
     private final AppointmentRepository appointmentRepository;
 
     public ProfileResponse getProfile(String username){
@@ -74,8 +73,7 @@ public class UserService {
     public Page<RecipientResponse> getCurrentClinicRecipients(String sort, String range, String filter)  throws JsonProcessingException {
         Map<String, Object> filterNode = getFilterNote(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
-        User admin = authService.getCurrentUser();
-        Clinic clinic = clinicRepository.findByDeletedFalseAndAdmin(admin).orElseThrow(() -> new VasException("Clinic not found"));
+        Clinic clinic = clinicService.getCurrentClinic();
         List<Appointment> appointments = appointmentRepository.findByClinic(clinic);
         List<RecipientResponse> recipientList = appointments.stream()
                 .map(Appointment::getRecipient)

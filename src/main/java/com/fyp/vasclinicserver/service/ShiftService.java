@@ -45,8 +45,6 @@ public class ShiftService {
         Shift shift = new Shift();
         shift.setStart(TimeUtil.convertStringDateTimeToInstant(shiftRequest.getStart(), TimeUtil.OFFSET_DATE_TIME_FORMAT));
         shift.setEnd(TimeUtil.convertStringDateTimeToInstant(shiftRequest.getEnd(), TimeUtil.OFFSET_DATE_TIME_FORMAT));
-        System.out.println(shift.getStart());
-        //TODO::date valid
         shift.setDoctor(doctor);
         shift.setEnabled(true);
         shift.setShiftBoard(shiftBoard);
