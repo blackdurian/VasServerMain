@@ -51,7 +51,7 @@ public class AuthController {
         }
         Role role = roleRepository.findByName(RoleName.ROLE_RECIPIENT) .orElseThrow(() -> new VasException("User Role not set."));
         authService.signup(registerRequest,role);
-        return new ResponseEntity<>("User Registration Successful, activation email sent!!",
+        return new ResponseEntity<>(new ApiResponse(true, "User Registration Successful, activation email sent!!"),
                 OK);
     }
 
@@ -80,8 +80,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            AuthenticationResponse response = authService.login(loginRequest);
+            return ResponseEntity.status(OK).body(response);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false,e.getMessage()));
+        }
     }
 
     @PostMapping("/refresh/token")

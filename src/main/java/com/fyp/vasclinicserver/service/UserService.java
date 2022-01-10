@@ -10,6 +10,7 @@ import com.fyp.vasclinicserver.model.User;
 import com.fyp.vasclinicserver.model.enums.RoleName;
 import com.fyp.vasclinicserver.payload.ProfileResponse;
 import com.fyp.vasclinicserver.payload.RecipientResponse;
+import com.fyp.vasclinicserver.payload.UserSummary;
 import com.fyp.vasclinicserver.repository.AppointmentRepository;
 import com.fyp.vasclinicserver.repository.ClinicRepository;
 import com.fyp.vasclinicserver.repository.UserRepository;
@@ -34,11 +35,14 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class UserService {
+    private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
 
+    private final AuthService authService;
     private final ClinicService clinicService;
-    private final AppointmentRepository appointmentRepository;
+
 
     public ProfileResponse getProfile(String username){
         Optional<User> user = userRepository.findByUsername(username);
@@ -90,4 +94,8 @@ public class UserService {
         return PagingMapper.mapToPage(recipientList,sort,range);
     }
 
+    public UserSummary getCurrentUser() {
+        User user =  authService.getCurrentUser();
+        return new UserSummary(user.getId(),user.getUsername(),user.getName());
+    }
 }

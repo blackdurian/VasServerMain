@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface VaccineMapper {
-    @Mapping(target = "diseases", expression = "java(mapToDiseaseLongIds(vaccine.getDiseases()))")
+
     @InheritInverseConfiguration
     VaccineResponse mapToVaccineResponse(Vaccine vaccine);
 

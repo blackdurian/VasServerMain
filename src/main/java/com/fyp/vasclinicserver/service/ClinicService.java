@@ -5,14 +5,10 @@ import com.fyp.vasclinicserver.exceptions.VasException;
 import com.fyp.vasclinicserver.mapper.ClinicMapper;
 import com.fyp.vasclinicserver.mapper.PagingMapper;
 import com.fyp.vasclinicserver.mapper.UserMapper;
-import com.fyp.vasclinicserver.model.Clinic;
-import com.fyp.vasclinicserver.model.Role;
-import com.fyp.vasclinicserver.model.User;
+import com.fyp.vasclinicserver.model.*;
 import com.fyp.vasclinicserver.model.enums.RoleName;
 import com.fyp.vasclinicserver.payload.*;
-import com.fyp.vasclinicserver.repository.ClinicRepository;
-import com.fyp.vasclinicserver.repository.RoleRepository;
-import com.fyp.vasclinicserver.repository.UserRepository;
+import com.fyp.vasclinicserver.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,6 +32,8 @@ public class ClinicService {
     private final ClinicRepository clinicRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final VaccineRepository vaccineRepository;
+    private final VaccineInventoryRepository vaccineInventoryRepository;
 
     private final ClinicMapper clinicMapper;
     private final UserMapper userMapper;
@@ -222,4 +220,14 @@ public class ClinicService {
         return PagingMapper.mapToPage(admins,sort,range);
 
     }
+
+    public List<AvailableClinic> getAllClinicsByVaccineId(String id) {
+        Vaccine vaccine = vaccineRepository.getById(id);
+        List<VaccineInventory> vaccineInventories = vaccineInventoryRepository.findByVaccine(vaccine);
+        //TODO: filter clinic shift
+        return  vaccineInventories.stream()
+                .map(vaccineInventory -> clinicMapper.mapToAvailableClinic(vaccineInventory.getClinic(),vaccineInventory.getUnitPrice()))
+                .collect(Collectors.toList());
+    }
+
 }

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class ProfileController {
     private final UserService userService;
 
+    //TODO: move to UserController
     @GetMapping("/{username}")
     public ResponseEntity<?> getCurrentProfile(@PathVariable String username, Principal principal) {
         if (Objects.equals(username, principal.getName())){
@@ -38,6 +39,7 @@ public class ProfileController {
 
     }
 
+    //TODO: move to UserController
     @PreAuthorize("hasAnyRole('ROLE_CLINIC_DOCTOR','ROLE_CLINIC_ADMIN','ROLE_GOVT_AGENCY')")
     @GetMapping("/roles")
     public ResponseEntity<?>  getRoles(Authentication auth) {

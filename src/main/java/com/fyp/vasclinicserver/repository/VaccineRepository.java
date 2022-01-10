@@ -14,5 +14,5 @@ public interface VaccineRepository extends  JpaRepository<Vaccine,String> {
     Page<Vaccine> findByDeletedFalse(Pageable pageable);
     List<Vaccine> findByDeletedFalse();
     Page<Vaccine> findByDeletedFalseAndId(String id, Pageable pageable);
-    Page<Vaccine> findById(String id, Pageable pageable);
+
 }

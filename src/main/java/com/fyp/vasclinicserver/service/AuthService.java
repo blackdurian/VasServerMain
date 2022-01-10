@@ -108,11 +108,8 @@ public class AuthService { //TODO: Refactor to Account module new Server
                 loginRequest.getPassword()
                 )
         );
-
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-
         String token = jwtProvider.generateToken(authenticate);
-        System.out.println(token);
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())

@@ -33,7 +33,7 @@ public class VaccineController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    //GET http://my.api.url/posts?sort=["title","ASC"]&range=[0, 24]&filter={"title":"bar"}
+    //GET http://my.api.url/api/vaccines?sort=["title","ASC"]&range=[0, 24]&filter={"title":"bar"}
     @GetMapping
     public ResponseEntity<?> getAllVaccines(
                                     @RequestParam(value = "sort",  defaultValue = "[\"id\",\"ASC\"]" ) String sort,

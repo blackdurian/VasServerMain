@@ -21,7 +21,7 @@ public class VaccineInventory extends BaseEntity {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaccine_id", referencedColumnName = "id")
     private Vaccine vaccine;
     @ManyToOne(fetch = FetchType.LAZY)

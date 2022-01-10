@@ -24,11 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ClinicController {
     private final ClinicService clinicService;
-    private final VaccineOrderService vaccineOrderService;
-
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-
 
     @PostMapping
     public ResponseEntity<?> createClinic(@RequestBody ClinicRequest clinicRequest){
@@ -54,7 +50,6 @@ public class ClinicController {
                     .body("Error Message" + e.getMessage());
         }
     }
-
 
 /*    @GetMapping("/roles")
     public ResponseEntity<?> getAllClinicRoles(
@@ -129,7 +124,7 @@ public class ClinicController {
         } catch (JsonProcessingException | NullPointerException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Error Message" + e.getMessage());
+                    .body(new ApiResponse(false, e.getMessage()));
         }
     }
 
@@ -152,5 +147,10 @@ public class ClinicController {
         }
     }
 
+    @GetMapping("/vaccines")
+    public ResponseEntity<?> getAllAvailableClinicsByVaccineId(@RequestParam String id){
+        List<AvailableClinic> responses = clinicService.getAllClinicsByVaccineId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
 
 }
