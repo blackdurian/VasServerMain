@@ -38,6 +38,8 @@ public class ShiftService {
     private final ClinicService clinicService;
 
     public ShiftResponse save(ShiftRequest shiftRequest){
+        //TODO: validate doctor time slot
+        //TODO: validate shiftBoard time conflict
         User doctor = userRepository.findByUsername(shiftRequest.getDoctor())
                 .orElseThrow(() -> new VasException(shiftRequest.getDoctor()+ " doctor no found"));
         ShiftBoard shiftBoard = shiftBoardRepository.findById(shiftRequest.getShiftBoard())
@@ -53,7 +55,7 @@ public class ShiftService {
     }
 
     public Page<ShiftResponse> getCurrentClinicShifts(String sort, String range, String filter) throws JsonProcessingException {
-        // TODO improve Map<String,Object> filter method involved
+        // TODO: improve Map<String,Object> filter method involved
         Map<String, Object> filterNode =  PagingMapper.mapToFilterNode(filter);
         Optional<String> firstKey = filterNode.keySet().stream().findFirst();
         Clinic clinic = clinicService.getCurrentClinic();

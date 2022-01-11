@@ -1,19 +1,24 @@
 package com.fyp.vasclinicserver.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fyp.vasclinicserver.exceptions.ResourceNotFoundException;
 import com.fyp.vasclinicserver.exceptions.VasException;
 import com.fyp.vasclinicserver.mapper.AppointmentMapper;
+import com.fyp.vasclinicserver.mapper.PagingMapper;
 import com.fyp.vasclinicserver.model.*;
 import com.fyp.vasclinicserver.model.enums.AppointmentStatus;
-import com.fyp.vasclinicserver.payload.AppointmentRequest;
-import com.fyp.vasclinicserver.payload.AppointmentResponse;
-import com.fyp.vasclinicserver.payload.NotificationEmail;
-import com.fyp.vasclinicserver.payload.ShiftResponse;
+import com.fyp.vasclinicserver.payload.*;
 import com.fyp.vasclinicserver.repository.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -27,10 +32,12 @@ public class AppointmentService {
     private final ClinicRepository clinicRepository;
 
     private final MailService mailService;
+    private final ClinicService clinicService;
 
     private final AppointmentMapper appointmentMapper;
 
     public AppointmentResponse save(AppointmentRequest appointmentRequest) {
+        //TODO: check user appointment time conflict
         User recipient = userRepository.findByUsername(appointmentRequest.getRecipient())
                 .orElseThrow(()->new ResourceNotFoundException("recipient","Username",appointmentRequest.getRecipient()));
         Shift shift = shiftRepository.findById(appointmentRequest.getShiftId())
@@ -39,6 +46,7 @@ public class AppointmentService {
                 .orElseThrow(()->new ResourceNotFoundException("clinic","id",appointmentRequest.getClinicId()));
         Vaccine vaccine = vaccineRepository.findById(appointmentRequest.getVaccineId())
                 .orElseThrow(()->new ResourceNotFoundException("vaccine","id",appointmentRequest.getVaccineId()));
+        //TODO: mapper
         Appointment appointment = new Appointment();
         appointment.setRecipient(recipient);
         if(shift.isEnabled()){
@@ -56,4 +64,53 @@ public class AppointmentService {
                 ", your appointment is on processing. Please wait for confirmation."));
     return appointmentMapper.mapToAppointmentResponse(savedAppointment);
     }
+
+    public Page<AppointmentResponse> getCurrentClinicAppointments(String sort, String range, String filter) throws JsonProcessingException {
+        Clinic clinic = clinicService.getCurrentClinic();
+        List<Appointment> appointments = appointmentRepository.findByClinic(clinic);
+        List<AppointmentResponse> appointmentResponses = appointments.stream()
+                .map(appointmentMapper::mapToAppointmentResponse)
+                .collect(Collectors.toList());
+        //filter
+        Map<String, Object> filterNode = PagingMapper.mapToFilterNode(filter);
+        Set<String> keys = filterNode.keySet();
+        if (keys.size() > 0) {
+            String[] qKeys = new String[]{"q", "id","status"};
+            // q: all text search
+            if (keys.contains(qKeys[0])) {
+                Object value = filterNode.get(qKeys[0]);
+                if (value instanceof String && !(((String) value).trim()).isEmpty()) {
+                    appointmentResponses = appointmentResponses.stream()
+                            .filter(response -> response.getId().contains((String) value)
+                                    || response.getRecipient().contains((String) value)
+                                    || response.getShift().getDoctor().contains((String) value)
+                                    || response.getClinic().getName().contains((String) value)
+                                    || response.getRemark().contains((String) value)
+                                    || response.getStatus().contains((String) value)
+                            ).collect(Collectors.toList());
+                }
+            }
+            // id: filter by id
+            if (keys.contains(qKeys[1])) {
+                Object value = filterNode.get(qKeys[1]);
+                if (value instanceof String && !(((String) value).trim()).isEmpty()) {
+                    appointmentResponses = appointmentResponses.stream()
+                            .filter(response -> response.getId().contains((String) value)
+                            ).collect(Collectors.toList());
+                }
+            }
+            if (keys.contains(qKeys[2])) {
+                Object value = filterNode.get(qKeys[1]);
+                if (value instanceof String && !(((String) value).trim()).isEmpty()) {
+                    appointmentResponses = appointmentResponses.stream()
+                            .filter(vaccine -> vaccine.getStatus().contains((String)value)
+                            ).collect(Collectors.toList());
+                }
+            }
+        }
+        return PagingMapper.mapToPage(appointmentResponses,sort,range);
+    }
+
+
+
 }

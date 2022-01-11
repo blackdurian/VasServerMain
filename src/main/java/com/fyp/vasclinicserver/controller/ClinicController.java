@@ -51,15 +51,6 @@ public class ClinicController {
         }
     }
 
-/*    @GetMapping("/roles")
-    public ResponseEntity<?> getAllClinicRoles(
-            @RequestParam(value = "sort",  defaultValue = "[\"id\",\"ASC\"]" ) String sort,
-            @RequestParam(value = "range",  defaultValue = "[0,9]")  String  range,
-            @RequestParam(value = "filter",  defaultValue = "{}")  String filter
-    ) {
-
-    }*/
-
     @GetMapping("/employees")
     public ResponseEntity<?> getCurrentClinicEmployees(
             @RequestParam(value = "sort",  defaultValue = "[\"id\",\"ASC\"]" ) String sort,
@@ -78,7 +69,6 @@ public class ClinicController {
         }
     }
 
-    //TODO add role
     @PostMapping("/employees")
     @PreAuthorize("hasRole('ROLE_CLINIC_ADMIN')")
     public ResponseEntity<?> createClinicEmployee(@Valid @RequestBody EmployeeRequest employeeRequest) {
@@ -96,6 +86,7 @@ public class ClinicController {
 
 
     @PostMapping("/admins")
+    @PreAuthorize("hasRole('ROLE_GOVT_AGENCY')")
     public ResponseEntity<?>createAdmin(@RequestBody EmployeeRequest employeeRequest){
         if(userRepository.existsByUsername(employeeRequest.getUsername())) {
             return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),

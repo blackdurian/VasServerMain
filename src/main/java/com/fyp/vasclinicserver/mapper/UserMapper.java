@@ -45,10 +45,19 @@ public interface UserMapper {
     @InheritInverseConfiguration
     RegisterRequest mapToRegisterRequest(EmployeeRequest employeeRequest);
 
+    @Mapping(target = "id", source = "username")
+    @Mapping(target = "gender", expression = "java(user.getGender().getLabel())")
+    @Mapping(target = "bod", expression = "java(mapBod(user.getBod()))")
+    @Mapping(target = "roles", expression = "java(mapRoles(user.getRoles()))")
+    @Mapping(target = "verified", source = "enabled")
+    @InheritInverseConfiguration
+    GovtAgencyAdminResponse mapToGovtAgencyAdminResponse(User user);
+
     default String mapRoles(Set<Role> roles) {
         return roles.stream().map(role -> role.getName().getLabel()).collect(Collectors.joining(" | "));
     }
     default String mapBod(Instant bod) {
         return TimeUtil.convertInstantToStringDateTime(bod, TimeUtil.BOD_FORMAT);
     }
+
 }

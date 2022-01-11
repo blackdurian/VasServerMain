@@ -218,7 +218,6 @@ public class ClinicService {
 
         }
         return PagingMapper.mapToPage(admins,sort,range);
-
     }
 
     public List<AvailableClinic> getAllClinicsByVaccineId(String id) {
