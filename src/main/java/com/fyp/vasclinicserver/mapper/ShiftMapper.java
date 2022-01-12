@@ -1,7 +1,7 @@
 package com.fyp.vasclinicserver.mapper;
 
 import com.fyp.vasclinicserver.model.Shift;
-import com.fyp.vasclinicserver.payload.ShiftResponse;
+import com.fyp.vasclinicserver.payload.shift.ShiftResponse;
 import com.fyp.vasclinicserver.util.TimeUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

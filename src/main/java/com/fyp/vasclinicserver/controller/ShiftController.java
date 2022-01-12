@@ -2,10 +2,8 @@ package com.fyp.vasclinicserver.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fyp.vasclinicserver.mapper.PagingMapper;
-import com.fyp.vasclinicserver.payload.ClinicRequest;
-import com.fyp.vasclinicserver.payload.EmployeeResponse;
-import com.fyp.vasclinicserver.payload.ShiftRequest;
-import com.fyp.vasclinicserver.payload.ShiftResponse;
+import com.fyp.vasclinicserver.payload.shift.ShiftRequest;
+import com.fyp.vasclinicserver.payload.shift.ShiftResponse;
 import com.fyp.vasclinicserver.service.ShiftService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
