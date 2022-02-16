@@ -17,6 +17,6 @@ public interface ShiftBoardMapper {
     ShiftBoardResponse mapToShiftBoardResponse(ShiftBoard shiftBoard);
 
     default String mapToStringDate(Instant date) {
-        return TimeUtil.convertInstantToStringDateTime(date, TimeUtil.OFFSET_DATE_TIME_FORMAT);
+        return TimeUtil.convertInstantToStringDateTime(date, TimeUtil.ISO_INSTANT_FORMAT);
     }
 }

@@ -61,8 +61,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .permitAll()
                     .antMatchers(HttpMethod.GET,"/api/vaccines/**")
                         .permitAll()
-                .antMatchers(HttpMethod.GET,"/api/clinic/vaccines/**")
-                .permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/clinic/vaccines/**")
+                        .permitAll()
+                    .antMatchers(HttpMethod.GET,"/api/shift/available/options/**")
+                        .permitAll()
                     .antMatchers("/",
                             "/favicon.ico",
                             "/**/*.png",

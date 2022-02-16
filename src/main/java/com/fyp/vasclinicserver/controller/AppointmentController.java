@@ -1,6 +1,7 @@
 package com.fyp.vasclinicserver.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fyp.vasclinicserver.exceptions.ResourceNotFoundException;
 import com.fyp.vasclinicserver.mapper.PagingMapper;
 import com.fyp.vasclinicserver.payload.*;
 import com.fyp.vasclinicserver.service.AppointmentService;
@@ -13,15 +14,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/appointment")
+@RequestMapping("/api/appointments")
 @AllArgsConstructor
 public class AppointmentController {
     private final AppointmentService appointmentService;
     //create appointment
     @PostMapping
-    public ResponseEntity<AppointmentResponse> createAppointment(@RequestBody AppointmentRequest appointmentRequest){
-        AppointmentResponse response = appointmentService.save(appointmentRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<?> createAppointment(@RequestBody AppointmentRequest appointmentRequest){
+        try {
+            AppointmentResponse response = appointmentService.save(appointmentRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }catch (ResourceNotFoundException | NullPointerException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, e.getMessage()));
+        }
     }
 
     //view appointment
@@ -42,5 +49,14 @@ public class AppointmentController {
                     .body(new ApiResponse(false, e.getMessage()));
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findAppointmentById(@PathVariable("id")String id ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(appointmentService.getAppointmentById(id));
+
+    }
+
 
 }

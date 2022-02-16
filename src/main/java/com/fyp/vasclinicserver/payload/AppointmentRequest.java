@@ -13,4 +13,5 @@ public class AppointmentRequest {
     private String clinicId;
     private String vaccineId;
     private String remark;
+    private Integer doseNumber;//1,2,3,4
 }

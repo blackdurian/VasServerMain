@@ -2,20 +2,20 @@ package com.fyp.vasclinicserver.util;
 
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 @Component
 public class TimeUtil {
     //Todo: Get Timezone from properties file
-    public static final DateTimeFormatter BOD_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneId.systemDefault());
-    public static final DateTimeFormatter MFG_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneId.systemDefault());
-    public static final DateTimeFormatter EXPIRY_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneId.systemDefault());
-    public static final DateTimeFormatter OFFSET_DATE_FORMAT = DateTimeFormatter.ISO_OFFSET_DATE.withZone(ZoneId.systemDefault());
-    public static final DateTimeFormatter OFFSET_DATE_TIME_FORMAT = DateTimeFormatter.ISO_OFFSET_DATE_TIME.withZone(ZoneId.systemDefault());
+    public static final DateTimeFormatter BOD_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneOffset.systemDefault());
+    public static final DateTimeFormatter MFG_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneOffset.systemDefault());
+    public static final DateTimeFormatter EXPIRY_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneOffset.systemDefault());
+    public static final DateTimeFormatter OFFSET_DATE_FORMAT = DateTimeFormatter.ISO_OFFSET_DATE.withZone(ZoneOffset.systemDefault());
+    public static final DateTimeFormatter ISO_INSTANT_FORMAT = DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.systemDefault());
+    public static final DateTimeFormatter ISO_LOCAL_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneOffset.systemDefault());
+    public static final DateTimeFormatter SHIFT_TIME_FORMAT = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withZone(ZoneOffset.systemDefault());
 
     public static Instant convertStringDateTimeToInstant(String date, DateTimeFormatter formatter){
        return LocalDateTime.parse(date, formatter)
@@ -32,7 +32,6 @@ public class TimeUtil {
     }
     public static String convertInstantToStringDateTime(Instant date, DateTimeFormatter formatter){
         return formatter.format(date);
-
     }
 
 }

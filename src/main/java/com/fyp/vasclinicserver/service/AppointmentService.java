@@ -38,8 +38,11 @@ public class AppointmentService {
 
     public AppointmentResponse save(AppointmentRequest appointmentRequest) {
         //TODO: check user appointment time conflict
+        //TODO: check user vaccine conflict
         User recipient = userRepository.findByUsername(appointmentRequest.getRecipient())
                 .orElseThrow(()->new ResourceNotFoundException("recipient","Username",appointmentRequest.getRecipient()));
+        List<Appointment> appointments = appointmentRepository.findByRecipientAndStatus(recipient,AppointmentStatus.SCHEDULED);
+
         Shift shift = shiftRepository.findById(appointmentRequest.getShiftId())
                 .orElseThrow(()->new ResourceNotFoundException("shift","id",appointmentRequest.getShiftId()));
         Clinic clinic = clinicRepository.findById(appointmentRequest.getClinicId())
@@ -51,6 +54,7 @@ public class AppointmentService {
         appointment.setRecipient(recipient);
         if(shift.isEnabled()){
             appointment.setShift(shift);
+            shift.setEnabled(false);
         }else {
             throw new VasException("invalid time shift");
         }
@@ -59,9 +63,10 @@ public class AppointmentService {
         appointment.setRemark(appointmentRequest.getRemark());
         appointment.setStatus(AppointmentStatus.PENDING);
         Appointment savedAppointment = appointmentRepository.save(appointment);
+        shiftRepository.save(shift);
         mailService.sendMail(new NotificationEmail("Vaccine Appointment from VAS",
                 recipient.getEmail(), "Thank you for appointment request to " + clinic.getName()+
-                ", your appointment is on processing. Please wait for confirmation."));
+                ", your vaccine appointment ("+shift.getStart() +" to "+shift.getEnd()+") is on processing. Please wait for confirmation."));
     return appointmentMapper.mapToAppointmentResponse(savedAppointment);
     }
 
@@ -112,5 +117,8 @@ public class AppointmentService {
     }
 
 
+    public Object getAppointmentById(String id) {
 
+
+    }
 }

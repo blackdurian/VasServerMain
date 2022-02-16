@@ -31,6 +31,8 @@ public class Appointment extends UserBaseEntity {
     @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private User recipient;
 
+    private String vaccinationId;
+
     @OneToOne
     @JoinColumn(name = "shift_id", referencedColumnName = "id")
     private Shift shift;
@@ -42,6 +44,8 @@ public class Appointment extends UserBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vaccines_id", referencedColumnName = "id")
     private Vaccine vaccine;
+
+    private Integer doseNumber;//1,2,3,4
 
     private String remark;
 
