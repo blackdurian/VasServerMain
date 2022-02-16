@@ -117,8 +117,9 @@ public class AppointmentService {
     }
 
 
-    public Object getAppointmentById(String id) {
-
-
+    public AppointmentResponse getAppointmentById(String id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() ->new ResourceNotFoundException("Appointment","id",id));
+        return appointmentMapper.mapToAppointmentResponse(appointment);
     }
 }

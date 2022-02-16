@@ -55,7 +55,6 @@ public class AppointmentController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(appointmentService.getAppointmentById(id));
-
     }
 
 

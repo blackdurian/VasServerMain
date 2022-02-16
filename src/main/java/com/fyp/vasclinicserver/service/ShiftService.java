@@ -82,7 +82,8 @@ public class ShiftService {
 
     public Map<String, List<ShiftBasic>> getShiftOptionsByClinic(String clinicId) {
         Map<String, List<ShiftBasic>> result = new TreeMap<>();
-        Clinic clinic = clinicRepository.findById(clinicId).orElseThrow(()->new ResourceNotFoundException("Clinic","id",clinicId));
+        Clinic clinic = clinicRepository.findById(clinicId)
+                .orElseThrow(()->new ResourceNotFoundException("Clinic","id",clinicId));
         List<Shift> shifts = shiftRepository.findByShiftBoard_ClinicAndShiftBoard_Status(clinic,ShiftBoardStatus.PUBLISHED)
                 .stream().filter(Shift::isEnabled).collect(Collectors.toList());
         Set<Instant> distinctDate = shifts.stream()
