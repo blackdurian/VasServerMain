@@ -10,11 +10,19 @@ import java.util.Map;
 
 public class PagingMapper {
     public static Pageable mapToPageable(String sort, String  range) throws JsonProcessingException {
+        //TODO: Complex object Sort
+        //TODO: Fix pagging range
         ObjectMapper mapper = new ObjectMapper();
         List<String> sortList = mapper.readValue(sort, new TypeReference<List<String>>() {});
         List<Integer> rangeList = mapper.readValue(range, new TypeReference<List<Integer>>() {});
-      return PageRequest.of(rangeList.get(0), rangeList.get(1),
-                Sort.Direction.fromString(sortList.get(1)), sortList.get(0));
+        if(rangeList.get(0)<rangeList.get(1)&&rangeList.get(1)>0){
+            return PageRequest.of(rangeList.get(0), rangeList.get(1),
+                    Sort.Direction.fromString(sortList.get(1)), sortList.get(0));
+        }else {
+            return PageRequest.of(0, 9, //TODO: get default paging
+                    Sort.Direction.fromString(sortList.get(1)), sortList.get(0));
+        }
+
     }
 
     public static Map<String,Object> mapToFilterNode(String filter) throws JsonProcessingException {

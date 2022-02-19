@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class ShiftBoardController {
 
     //TODO:  rbac implement, validate role
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_CLINIC_ADMIN')")
     public ResponseEntity<?> createShiftBoard(@RequestBody ShiftBoardPostRequest shiftBoardPostRequest){
         Clinic clinic = clinicService.getCurrentClinic();
         if(shiftBoardRepository.existsByNameAndClinic(shiftBoardPostRequest.getName(),clinic)){
@@ -69,8 +71,6 @@ public class ShiftBoardController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateShiftBoard(@RequestBody ShiftBoardResponse shiftBoardPutRequest, @PathVariable Long id) {
-        System.out.println(shiftBoardPutRequest.getId());
-        System.out.println(shiftBoardPutRequest.getStatus());
         //TODO: valid ShiftBoard Status
         ShiftBoardResponse response = shiftBoardService.updateShiftBoards(shiftBoardPutRequest,id);
         return ResponseEntity.status(HttpStatus.OK).body(response);

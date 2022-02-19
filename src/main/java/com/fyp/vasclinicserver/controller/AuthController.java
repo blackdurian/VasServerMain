@@ -103,8 +103,9 @@ public class AuthController {
 
     @PostMapping("/user/role")
     public ResponseEntity<?> getCurrentUserRole(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        List<String> roles = authService.getCurrentUserRole(refreshTokenRequest);
-        return ResponseEntity.status(OK).body(roles);
+        return ResponseEntity
+                .status(OK)
+                .body(authService.getCurrentUserRole(refreshTokenRequest));
     }
 
 }
