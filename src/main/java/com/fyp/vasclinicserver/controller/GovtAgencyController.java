@@ -43,9 +43,9 @@ public class GovtAgencyController
         }
     }
 
-    @PostMapping("/employees")
+    @PostMapping("/admins")
     @PreAuthorize("hasRole('ROLE_GOVT_AGENCY')")
-    public ResponseEntity<?> createGovtAgencyEmployee(@Valid @RequestBody EmployeeRequest employeeRequest) {
+    public ResponseEntity<?> createGovtAgencyAdmin(@Valid @RequestBody EmployeeRequest employeeRequest) {
         if(userRepository.existsByUsername(employeeRequest.getUsername())) {
             return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
